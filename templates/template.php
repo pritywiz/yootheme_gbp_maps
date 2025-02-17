@@ -54,7 +54,7 @@ $script = $this->el('script', ['type' => 'application/json'], json_encode($optio
 
 // Width and Height
 $props['width'] = trim($props['width'] ?: '', 'px');
-$props['height'] = trim($props['height'] ?: '300', 'px');
+$props['height'] = trim($props['height'] ?: '', 'px');
 //$scriptMap = $this->el('script', ['type' => 'application/json'], json_encode($paramsMap));
 //var_dump($options);
 ?>
@@ -63,16 +63,7 @@ $props['height'] = trim($props['height'] ?: '300', 'px');
     <?= $script() ?>
     <script>
 
-window.mapOptions = {
-  "center":{"lat":52.6,"lng":0.5},
-  "fullscreenControl":true,
-  "mapTypeControl":true,
-  "streetViewControl":true,
-  "zoom":10,
-  "zoomControl":true,
-  "maxZoom":17,
-  "mapId":"bd32a1a1e5190d3e"
-};
+window.mapOptions = <?= json_encode($mapOptions) ?>;
 window.gbpPlaceIds = <?= json_encode($placeIds) ?>;
 
 window.marker = {
@@ -81,20 +72,31 @@ window.marker = {
   "height": <?= $props['marker_icon_height'] ?>
 }
 </script>
-<div class="uk-flex uk-flex-row">
-    <div class="uk-flex uk-flex-center" style="width: 70px;" id="category-buttons">
-        <div>
-        <?php foreach($mapsCategoryButtons as $button) : ?>
-            <button data-type="<?= $button["type"]?>" style="width:60px" type="button" class="uk-button uk-border-rounded uk-button-primary uk-margin-xsmall-right uk-margin-xsmall-bottom places-type" uk-tooltip="<?= $button["label"]?>">
-                <img src="//maps.gstatic.com/mapfiles/place_api/icons/v2/<?= $button["icon"]?>_pinlet.svg" alt="<?= $button["label"]?>">
-            </button>
-        <?php endforeach ?>
+<div class="uk-flex uk-flex-column">
+    <div class="uk-flex uk-flex-row">
+        <div class="uk-flex uk-flex-center" style="width: 70px;" id="category-buttons">
+            <div>
+            <?php foreach($mapsCategoryButtons as $button) : ?>
+                <button data-type="<?= $button["type"]?>" style="width:60px" type="button" class="uk-button uk-border-rounded uk-button-primary uk-margin-xsmall-right uk-margin-xsmall-bottom places-type" uk-tooltip="<?= $button["label"]?>">
+                    <img src="//maps.gstatic.com/mapfiles/place_api/icons/v2/<?= $button["icon"]?>_pinlet.svg" alt="<?= $button["label"]?>">
+                </button>
+            <?php endforeach ?>
+            </div>
+        </div>
+        <div class="uk-position-relative">
+            <div id="map" data-place="<?= $props['place_id'] ?>" style="width:100%; height:100%"></div>
+            <div class="uk-position-absolute" style="right: 65px; bottom: 30px;">
+            <div id="direction-info" class="uk-box-shadow-small uk-padding-small uk-background-default"></div>
+            </div>
         </div>
     </div>
-    <div class="uk-position-relative">
-        <div id="map" data-place="<?= $props['place_id'] ?>" style="width:100%; height:100%"></div>
-        <div class="uk-position-absolute" style="right: 65px; bottom: 30px;">
-          <div id="direction-info" class="uk-box-shadow-small uk-padding-small uk-background-default"></div>
+    <div class="uk-flex uk-flex-center">
+        <div>
+        <?php foreach($locations as $location) : ?>
+            <button href="https://www.google.com/maps/dir/<?= urlencode($location)?>/--GMB_NAME--" type="button" class="uk-button uk-border-rounded uk-button-primary uk-margin-xsmall-right uk-margin-xsmall-bottom" uk-tooltip="<?= $location?>">
+                <?= $location?>
+            </button>
+        <?php endforeach ?>
         </div>
     </div>
 </div>

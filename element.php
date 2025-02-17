@@ -31,6 +31,7 @@ return [
             }
             $node->placeIds = explode("\r\n", $googlemapapiParams->places_ids);
             $node->mapsCategoryButtons = $placesTypes;
+            $node->locations = $googlemapapiParams->locations;
 
             // $plugin
             //$googlemapapi = $plugin->params->get("googlemapapi"); 
@@ -47,17 +48,28 @@ return [
                 'max_zoom',
                 'zooming',
                 'dragging',
-                'clustering',
                 'controls',
                 'popup_max_width',
             ]);
-            $node->options['center'] = $center ?: ['lat' => 52.6, 'lng' => 0.5];
+            // $node->options['center'] = $center ?: ['lat' => 52.6, 'lng' => 0.5];
+            $node->mapOptions = [ 
+                "center" => ['lat' => 52.6, 'lng' => 0.5],
+                "fullscreenControl" => $node->props["full_screen"],
+                "mapTypeControl" => $node->props["controls"],
+                "mapTypeId" => $node->props["type"],
+                "streetViewControl" => false,
+                "zoom" => $node->props["zoom"],
+                "zoomControl" => $node->props["zooming"],
+                "minZoom" => $node->props["min_zoom"],
+                "maxZoom" => $node->props["max_zoom"],
+                "mapId" => $googlemapapiParams->map_id
+            ];
             $node->options['lazyload'] = true;
 
             $node->options = array_filter($node->options, fn($value) => isset($value));
 
             $node->props['metadata'] = [];
-            $node->options['mapId'] = $googlemapapiParams->map_id;
+            // $node->options['mapId'] = $googlemapapiParams->map_id;
 
             // add scripts, styles
             $key = $config('~theme.google_maps');
